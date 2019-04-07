@@ -1,0 +1,54 @@
+{
+    "builders": [{
+        "name": "centos-7-1810-mdw",
+        "vm_name": "centos-7-mdw",
+        "type": "vmware-iso",
+        "guest_os_type": "centos-64",
+        "tools_upload_flavor": "linux",
+        "headless": false,
+
+        "iso_url": "https://mirror.umd.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1810.iso",
+        "iso_checksum": "38d5d51d9d100fd73df031ffd6bd8b1297ce24660dc8c13a3b8b4534a4bd291c",
+        "iso_checksum_type": "sha256",
+        "ssh_username": "{{user `ssh_username`}}",
+        "ssh_password": "{{user `ssh_password`}}",
+        "ssh_timeout": "15m",
+        "disk_type_id": "thin",
+
+        "boot_command": [
+            "<up><tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort}}//ks.cfg<enter><wait>"
+        ],
+        "boot_wait": "10s",
+
+        "shutdown_command": "echo 'shutdown -P now' > shutdown.sh; echo 'gpadmin'|sudo -S sh 'shutdown.sh'",
+
+        "disk_size": "{{ user `disk_size` }}",
+        "http_directory": "{{ user `http_directory` }}",
+        "output_directory": "output{{ user `vm_name` }}-vmware-iso",
+        "vmx_data": {
+            "cpuid.coresPerSocket": "1",
+            "memsize": "{{ user `memory` }}",
+            "numvcpus": "{{ user `cpus` }}",
+            "ethernet0.networkName": "Management Network"
+        },
+        "remote_type": "esx5",
+        "remote_host": "{{ user `esxi_host` }}",
+        "remote_datastore": "{{ user `esxi_datastore` }}",
+        "remote_username": "{{user `esxi_username`}}",
+        "remote_password": "{{user `esxi_password`}}",
+        "keep_registered": true,
+        "vnc_disable_password": true
+    }],
+
+    "provisioners": [
+        {
+          "type": "shell",
+          "scripts": [
+            "scripts/c7-open-vm-tools.sh"
+          ],
+          "execute_command": "echo 'gpadmin' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'"
+        }
+    ]
+
+
+}
