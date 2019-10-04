@@ -1,0 +1,20 @@
+{
+    "vcenter_server":"",
+    "username": "",
+    "password": "",
+
+    "datastore":"ssd0",
+    "folder": "_Templates",
+    "host":"192.168.0.101",
+    "cluster": "workercluster",
+    "network": "Management",
+    
+    "vm_name": "centos7",
+
+    "memory": "8000",
+    "cpus": "2",
+    "disk_size": "20000",
+
+    "ssh_username": "",
+    "ssh_password": ""
+}
